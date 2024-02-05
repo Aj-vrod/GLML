@@ -1,13 +1,18 @@
-version: "2.1"
+version: "3"
 
 services:
   postgres:
-    image: postgres:16-alpine
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: glml-postgres
+    image: postgres:14.2-alpine
     ports:
       - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: glml-postgres
+      POSTGRES_DB: glml
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - ./database:/docker-entrypoint-initdb.d
